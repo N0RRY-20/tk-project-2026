@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,19 +12,27 @@ import {
 } from "@/components/ui/card";
 import {
   Field,
+  FieldContent,
   FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import z from "zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AUTH_DEFAULTS } from "@/constants/auth-constant";
+import {
+  AUTH_DEFAULTS,
+  INITIAL_AuthFormState,
+} from "@/constants/auth-constant";
 import { signInFormSchema } from "@/validations/auth-validation";
 import { FormInput } from "@/components/common/form-input";
+import { useEffect, useActionState, useTransition } from "react";
+import { toast } from "sonner";
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
+import { signInAction } from "@/actions/auth/signin";
 
 export function SignInForm({
   className,
@@ -33,11 +42,32 @@ export function SignInForm({
     resolver: zodResolver(signInFormSchema),
     defaultValues: AUTH_DEFAULTS.signIn,
   });
+  const router = useRouter();
+  const [isPendingTransition, startTransition] = useTransition();
+  const [state, action, isPending] = useActionState(
+    signInAction,
+    INITIAL_AuthFormState,
+  );
 
-  function onSubmit(data: z.infer<typeof signInFormSchema>) {
-    console.log(data);
-  }
+  useEffect(() => {
+    if (state.status === "success") {
+      toast.success("Login berhasil!");
+      router.push("/");
+    } else if (state.status === "error") {
+      const errorMsg = state.errors?.password?.[0] || "Terjadi kesalahan";
+      toast.error(errorMsg);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
+  const onSubmit = form.handleSubmit(async (data) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, String(value));
+    });
+    startTransition(() => action(formData));
+  });
+  const isLoading = isPending || isPendingTransition;
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -48,7 +78,7 @@ export function SignInForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit}>
             <FieldGroup>
               <Field>
                 <Button variant="outline" type="button">
@@ -87,8 +117,30 @@ export function SignInForm({
                 placeholder="Enter your password"
                 type="password"
               />
+              <Controller
+                control={form.control}
+                name="rememberMe"
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="rememberMe"
+                    />
+                    <FieldContent>
+                      <FieldLabel htmlFor="rememberMe">Remember me</FieldLabel>
+                    </FieldContent>
+                  </Field>
+                )}
+              />
+
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2Icon className="size-4 animate-spin" />
+                  ) : null}
+                  Login
+                </Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>
                 </FieldDescription>
