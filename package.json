@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "node --env-file .env --import tsx scripts/seed-user.ts"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "node --env-file .env --import tsx scripts/seed-user.ts",
+    "auth:generate": "npx auth@latest generate --config ./src/lib/better-auth/auth.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
