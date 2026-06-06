@@ -18,7 +18,6 @@ import {
 import {
   LayoutDashboardIcon,
   ListIcon,
-  ChartBarIcon,
   FolderIcon,
   UsersIcon,
   CameraIcon,
@@ -30,6 +29,7 @@ import {
   FileChartColumnIcon,
   FileIcon,
   CommandIcon,
+  ScanQrCode,
 } from "lucide-react";
 
 const data = {
@@ -50,9 +50,9 @@ const data = {
       icon: <ListIcon />,
     },
     {
-      title: "Analytics",
-      url: "#",
-      icon: <ChartBarIcon />,
+      title: "Scan User",
+      url: "/scan-user",
+      icon: <ScanQrCode />,
     },
     {
       title: "Projects",
