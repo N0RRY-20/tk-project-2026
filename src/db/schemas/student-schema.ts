@@ -13,9 +13,9 @@ export const student = pgTable(
         onDelete: "cascade",
       }),
     nickname: text("nickname"),
-    qrCode: text("qr_code").notNull().unique(),
-    gender: genderEnum("gender").notNull(),
-    className: text("class_name").notNull(),
+    qrCode: text("qr_code").unique(),
+    gender: genderEnum("gender"),
+    className: text("class_name"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()

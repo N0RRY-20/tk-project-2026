@@ -8,6 +8,13 @@
       "when": 1780680225381,
       "tag": "0000_rare_bucky",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780738799971,
+      "tag": "0001_friendly_frog_thor",
+      "breakpoints": true
     }
   ]
 }

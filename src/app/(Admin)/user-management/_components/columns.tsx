@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVerticalIcon, GripVerticalIcon } from "lucide-react";
 
-import type { UserRow } from "./dummy-data";
+import type { UserRow } from "@/types/user";
 
 export function getInitials(name: string) {
   return name
@@ -47,6 +47,8 @@ export function DragHandle({ id }: { id: UniqueIdentifier }) {
 
 export function createColumns(
   onViewDetail?: (user: UserRow) => void,
+  onEdit?: (user: UserRow) => void,
+  onDelete?: (user: UserRow) => void,
 ): ColumnDef<UserRow>[] {
   return [
     {
@@ -110,12 +112,7 @@ export function createColumns(
       header: "Role",
       cell: ({ row }) => {
         const role = row.original.role;
-        const variant =
-          role === "admin"
-            ? "default"
-            : role === "teacher"
-              ? "secondary"
-              : "outline";
+        const variant = role === "admin" ? "default" : "secondary";
         return (
           <Badge variant={variant} className="capitalize">
             {role}
@@ -136,13 +133,17 @@ export function createColumns(
       accessorKey: "gender",
       header: "Gender",
       cell: ({ row }) => {
-        const isMale = row.original.gender === "laki-laki";
+        const gender = row.original.gender;
+        if (!gender) {
+          return <span className="text-muted-foreground">—</span>;
+        }
+        const isMale = gender === "laki-laki";
         return (
           <Badge
             variant={isMale ? "default" : "secondary"}
             className="capitalize"
           >
-            {row.original.gender}
+            {gender}
           </Badge>
         );
       },
@@ -160,13 +161,17 @@ export function createColumns(
     {
       accessorKey: "qrCode",
       header: "QR Code",
-      cell: ({ row }) => (
-        <code className="text-xs text-muted-foreground">
-          {row.original.qrCode.length > 16
-            ? `${row.original.qrCode.slice(0, 16)}...`
-            : row.original.qrCode}
-        </code>
-      ),
+      cell: ({ row }) => {
+        const qrCode = row.original.qrCode;
+        if (!qrCode) {
+          return <code className="text-xs text-muted-foreground">—</code>;
+        }
+        return (
+          <code className="text-xs text-muted-foreground">
+            {qrCode.length > 16 ? `${qrCode.slice(0, 16)}...` : qrCode}
+          </code>
+        );
+      },
     },
     {
       id: "actions",
@@ -183,12 +188,17 @@ export function createColumns(
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit?.(row.original)}>Edit</DropdownMenuItem>
             <DropdownMenuItem onClick={() => onViewDetail?.(row.original)}>
               View details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => onDelete?.(row.original)}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),

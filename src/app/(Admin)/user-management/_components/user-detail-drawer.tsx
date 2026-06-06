@@ -18,7 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import type { UserRow } from "./dummy-data";
+import type { UserRow } from "@/types/user";
+
 import { getInitials } from "./columns";
 
 interface UserDetailDrawerProps {
@@ -73,7 +74,7 @@ export function UserDetailDrawer({
           <div className="flex justify-center px-6 py-4">
             <div
               ref={contentRef}
-              className="flex flex-col items-center gap-6 p-8 bg-white border-2 border-gray-200 rounded-2xl shadow-lg w-full max-w-[400px]"
+              className="flex flex-col items-center gap-6 p-8 bg-white border-2 border-gray-200 rounded-2xl shadow-lg w-full max-w-100"
             >
               <Avatar className="size-24">
                 {user.image ? (
@@ -95,15 +96,17 @@ export function UserDetailDrawer({
                 </Badge>
               ) : null}
 
-              <div className="flex flex-col items-center gap-2">
-                <QRCode
-                  value={user.qrCode}
-                  size={200}
-                  level="H"
-                  className="border-4 border-white"
-                />
-                <code className="text-xs text-gray-500">{user.qrCode}</code>
-              </div>
+              {user.qrCode ? (
+                <div className="flex flex-col items-center gap-2">
+                  <QRCode
+                    value={user.qrCode}
+                    size={200}
+                    level="H"
+                    className="border-4 border-white"
+                  />
+                  <code className="text-xs text-gray-500">{user.qrCode}</code>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
