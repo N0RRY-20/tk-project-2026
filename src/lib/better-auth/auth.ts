@@ -11,5 +11,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    changeEmail: {
+      enabled: true,
+      updateEmailWithoutVerification: true, // Set to true to update the email immediately without requiring verification
+    },
+  },
   plugins: [admin(), nextCookies()],
 });

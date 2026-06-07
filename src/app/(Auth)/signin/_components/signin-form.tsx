@@ -52,7 +52,11 @@ export function SignInForm({
   useEffect(() => {
     if (state.status === "success") {
       toast.success("Login berhasil!");
-      router.push("/");
+      if (state.role === "admin") {
+        router.push("/dashboard");
+      } else {
+        router.push("/profile");
+      }
     } else if (state.status === "error") {
       const errorMsg = state.errors?.password?.[0] || "Terjadi kesalahan";
       toast.error(errorMsg);

@@ -73,8 +73,8 @@ export function QrScanner({ onScan, isSearching }: QrScannerProps) {
       </div>
 
       <div
-        className="w-full relative flex items-center justify-center"
-        style={{ height: "60vh", maxHeight: "400px" }}
+        className="w-full relative flex items-center justify-center overflow-hidden touch-action-manipulation min-w-0"
+        style={{ minHeight: "300px", maxHeight: "400px" }}
       >
         {!isCameraStarted ? (
           <div className="flex flex-col items-center gap-3">
@@ -100,7 +100,7 @@ export function QrScanner({ onScan, isSearching }: QrScannerProps) {
             scanDelay={1000}
             sound
             styles={{
-              container: { width: "100%", height: "100%" },
+              container: { width: "100%", height: "100%", overflow: "hidden", maxWidth: "100%" },
               video: { objectFit: "cover" },
             }}
           />

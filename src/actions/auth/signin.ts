@@ -33,6 +33,7 @@ export async function signInAction(prevstate: AuthFormState, formData: FormData)
        revalidatePath('/', 'layout');
       return {
         status: "success",
+        role: user.role ?? "user",
       }
     }
 

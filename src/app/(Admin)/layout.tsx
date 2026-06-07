@@ -3,12 +3,23 @@ import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminGuard } from "@/components/admin-guard";
+import { auth } from "@/lib/better-auth/auth";
+import { headers } from "next/headers";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = {
+    name: session?.user?.name ?? "",
+    email: session?.user?.email ?? "",
+    avatar: session?.user?.image ?? "",
+  };
   return (
     <AdminGuard>
       <TooltipProvider>
@@ -20,10 +31,10 @@ export default function AuthLayout({
             } as React.CSSProperties
           }
         >
-          <AppSidebar variant="inset" />
+          <AppSidebar user={user} variant="inset" />
           <SidebarInset>
             <SiteHeader />
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col overflow-x-hidden">
               <div className="@container/main flex flex-1 flex-col gap-2">
                 <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                   {children}
