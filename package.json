@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "node --env-file .env --import tsx scripts/seed-user.ts",
-    "auth:generate": "npx auth@latest generate --config ./src/lib/better-auth/auth.ts"
+    "auth:generate": "npx auth@latest generate --config ./src/lib/better-auth/auth.ts",
+    "postinstall": "node -e \"const fs=require('fs');const p='node_modules/better-auth/node_modules/kysely';if(fs.existsSync(p)){fs.rmSync(p,{recursive:true,force:true});console.log('Removed nested kysely to use top-level 0.28.17')}\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -27,6 +28,7 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "html-to-image": "^1.11.13",
+    "kysely": "0.28.17",
     "lucide-react": "^1.17.0",
     "next": "16.2.7",
     "next-themes": "^0.4.6",
@@ -57,5 +59,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "kysely": "0.28.17"
   }
 }
