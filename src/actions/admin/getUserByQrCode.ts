@@ -26,5 +26,6 @@ export async function getUserByQrCode(qrCode: string): Promise<UserRow | null> {
     gender: row.student.gender ?? null,
     className: row.student.className ?? null,
     qrCode: row.student.qrCode ?? null,
+    audio_url: row.student.audioUrl ?? null,
   };
 }

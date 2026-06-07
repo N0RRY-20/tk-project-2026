@@ -8,6 +8,7 @@ export interface UserRow {
   gender: "laki-laki" | "perempuan" | null;
   className: string | null;
   qrCode: string | null;
+  audio_url: string | null;
 }
 export type UserFormState = {
   status?: "idle" | "success" | "error";

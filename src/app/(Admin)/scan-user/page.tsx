@@ -17,6 +17,7 @@ export default function ScanUserPage() {
     user: UserRow | null;
   } | null>(null);
   const [isSearching, setIsSearching] = React.useState(false);
+  const [scanKey, setScanKey] = React.useState(0);
 
   React.useEffect(() => {
     if (lastResult && !lastResult.user) {
@@ -28,6 +29,7 @@ export default function ScanUserPage() {
   const handleScan = React.useCallback(async (value: string) => {
     setIsSearching(true);
     const user = await getUserByQrCode(value);
+    setScanKey((k) => k + 1);
     setLastResult({ qrCode: value, user });
     setIsSearching(false);
   }, []);
@@ -38,7 +40,7 @@ export default function ScanUserPage() {
 
       {lastResult ? (
         lastResult.user ? (
-          <ScanResult user={lastResult.user} />
+          <ScanResult key={scanKey} user={lastResult.user} />
         ) : (
           <div className="flex justify-center p-4">
             <Badge variant="destructive">

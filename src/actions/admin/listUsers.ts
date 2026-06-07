@@ -44,9 +44,10 @@ export async function paginateUsers(
 
   const userIds = result.users.map((u) => u.id);
 
-  const studentRows = userIds.length > 0
-    ? await db.select().from(student).where(inArray(student.id, userIds))
-    : [];
+  const studentRows =
+    userIds.length > 0
+      ? await db.select().from(student).where(inArray(student.id, userIds))
+      : [];
 
   const studentMap = new Map(studentRows.map((s) => [s.id, s]));
 
@@ -60,6 +61,7 @@ export async function paginateUsers(
     gender: studentMap.get(u.id)?.gender ?? null,
     className: studentMap.get(u.id)?.className ?? null,
     qrCode: studentMap.get(u.id)?.qrCode ?? null,
+    audio_url: studentMap.get(u.id)?.audioUrl ?? null,
   }));
 
   return { users, total: result.total };
