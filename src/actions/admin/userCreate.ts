@@ -10,6 +10,7 @@ import { addUserFormSchema } from "@/validations/user-validation";
 import { INITIAL_USER_FORM_STATE } from "@/constants/user-constant";
 import type { UserFormState } from "@/types/user";
 import { auth } from "@/lib/better-auth/auth";
+import { uploadAvatarToStorage } from "@/actions/storage/uploadAvatar";
 
 export async function createUserAction(
   prevState: UserFormState,
@@ -56,6 +57,16 @@ export async function createUserAction(
         qrCode,
       };
       await db.insert(student).values(studentData);
+    }
+
+    // Upload avatar jika ada file
+    const file = formData.get("avatar") as File | null;
+    if (file && file.size > 0) {
+      try {
+        await uploadAvatarToStorage(user.user.id, file);
+      } catch (error) {
+        console.error("Failed to upload avatar:", error);
+      }
     }
 
     revalidatePath("/user-management");

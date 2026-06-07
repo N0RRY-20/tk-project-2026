@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/sheet";
 import { FieldGroup } from "@/components/ui/field";
 import { FormInput } from "@/components/common/form-input";
-import { Loader2Icon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CameraIcon, Loader2Icon } from "lucide-react";
 
 import { addUserFormSchema } from "@/validations/user-validation";
 import {
@@ -55,10 +56,17 @@ export function AddUserSheet({ open, onOpenChange, onSuccess }: AddUserSheetProp
   const role = form.watch("role");
   const isStudent = role === "student";
 
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+
   useEffect(() => {
     if (state.status === "success") {
       toast.success("User created successfully");
       form.reset();
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       onOpenChange(false);
       router.refresh();
       onSuccess?.();
@@ -83,6 +91,9 @@ export function AddUserSheet({ open, onOpenChange, onSuccess }: AddUserSheetProp
         formData.append(key, String(value));
       }
     });
+    if (selectedFile) {
+      formData.append("avatar", selectedFile);
+    }
     startTransition(() => dispatch(formData));
   });
 
@@ -105,6 +116,41 @@ export function AddUserSheet({ open, onOpenChange, onSuccess }: AddUserSheetProp
           className="flex-1 overflow-y-auto px-6 py-4"
         >
           <FieldGroup>
+            {/* Avatar Upload */}
+            <div className="flex items-center gap-4 pb-2">
+              <Avatar className="size-16">
+                {previewUrl ? (
+                  <AvatarImage src={previewUrl} alt="Preview" />
+                ) : null}
+                <AvatarFallback>
+                  <CameraIcon className="size-6" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setSelectedFile(file);
+                    setPreviewUrl(URL.createObjectURL(file));
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <CameraIcon className="size-4 mr-2" />
+                  Add Photo
+                </Button>
+              </div>
+            </div>
+
             <FormInput
               control={form.control}
               name="name"
