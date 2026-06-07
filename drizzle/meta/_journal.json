@@ -15,6 +15,13 @@
       "when": 1780738799971,
       "tag": "0001_friendly_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780817291526,
+      "tag": "0002_overconfident_killraven",
+      "breakpoints": true
     }
   ]
 }

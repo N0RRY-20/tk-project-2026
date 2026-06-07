@@ -16,6 +16,7 @@ export const student = pgTable(
     qrCode: text("qr_code").unique(),
     gender: genderEnum("gender"),
     className: text("class_name"),
+    audioUrl: text("audio_url"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
