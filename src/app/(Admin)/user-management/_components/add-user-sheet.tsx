@@ -28,6 +28,7 @@ import {
   INITIAL_USER_FORM_STATE,
 } from "@/constants/user-constant";
 import { createUserAction } from "@/actions/admin/userCreate";
+import { getClasses } from "@/actions/admin/class";
 import type { UserFormState } from "@/types/user";
 
 type AddUserFormData = z.infer<typeof addUserFormSchema>;
@@ -59,6 +60,15 @@ export function AddUserSheet({ open, onOpenChange, onSuccess }: AddUserSheetProp
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const [classList, setClassList] = React.useState<{ value: string; label: string }[]>([]);
+
+  React.useEffect(() => {
+    if (open && isStudent) {
+      getClasses().then((classes) => {
+        setClassList(classes.map((c) => ({ value: c.id, label: c.name })));
+      });
+    }
+  }, [open, isStudent]);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -209,9 +219,11 @@ export function AddUserSheet({ open, onOpenChange, onSuccess }: AddUserSheetProp
 
                 <FormInput
                   control={form.control}
-                  name="className"
+                  name="classId"
                   label="Class"
-                  placeholder="Class name"
+                  variant="select"
+                  selectPlaceholder="Select class"
+                  selectOptions={classList}
                 />
               </>
             )}

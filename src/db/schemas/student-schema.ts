@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, index, pgEnum } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
+import { classTable } from "./class-schema";
 
 export const genderEnum = pgEnum("gender", ["laki-laki", "perempuan"]);
 
@@ -15,7 +16,9 @@ export const student = pgTable(
     nickname: text("nickname"),
     qrCode: text("qr_code").unique(),
     gender: genderEnum("gender"),
-    className: text("class_name"),
+    classId: text("class_id").references(() => classTable.id, {
+      onDelete: "set null",
+    }),
     usia: text("usia"),
     tempatLahir: text("tempat_lahir"),
     tanggalLahir: timestamp("tanggal_lahir"),
@@ -41,4 +44,12 @@ export const studentRelations = relations(student, ({ one }) => ({
     fields: [student.id],
     references: [user.id],
   }),
+  class: one(classTable, {
+    fields: [student.classId],
+    references: [classTable.id],
+  }),
+}));
+
+export const classRelations = relations(classTable, ({ many }) => ({
+  students: many(student),
 }));

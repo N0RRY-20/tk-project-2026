@@ -3,7 +3,7 @@
 import { auth } from "@/lib/better-auth/auth";
 import { headers } from "next/headers";
 import { db } from "@/db";
-import { user, student } from "@/db/schemas";
+import { user, student, classTable } from "@/db/schemas";
 import { eq } from "drizzle-orm";
 import type { UserRow } from "@/types/user";
 
@@ -18,6 +18,7 @@ export async function getSessionUser(): Promise<UserRow | null> {
     .select()
     .from(student)
     .innerJoin(user, eq(student.id, user.id))
+    .leftJoin(classTable, eq(student.classId, classTable.id))
     .where(eq(student.id, session.user.id))
     .limit(1);
 
@@ -32,7 +33,8 @@ export async function getSessionUser(): Promise<UserRow | null> {
     role: row.user.role,
     nickname: row.student.nickname ?? null,
     gender: row.student.gender ?? null,
-    className: row.student.className ?? null,
+    classId: row.student.classId ?? null,
+    className: row.class?.name ?? null,
     qrCode: row.student.qrCode ?? null,
     audio_url: row.student.audioUrl ?? null,
   };

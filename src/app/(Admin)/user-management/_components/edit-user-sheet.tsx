@@ -26,6 +26,7 @@ import { updateUserFormSchema } from "@/validations/user-validation";
 import { INITIAL_USER_UPDATE_STATE } from "@/constants/user-constant";
 import { updateUserAction } from "@/actions/admin/userUpdate";
 import { uploadAvatarAction } from "@/actions/storage/uploadAvatar";
+import { getClasses } from "@/actions/admin/class";
 import type { UserUpdateFormState, UserRow } from "@/types/user";
 import { getInitials } from "./columns";
 
@@ -58,7 +59,7 @@ export function EditUserSheet({ open, onOpenChange, user, onSuccess }: EditUserS
       role: user?.role ?? "",
       nickname: user?.nickname ?? "",
       gender: user?.gender ?? "",
-      className: user?.className ?? "",
+      classId: user?.classId ?? "",
     },
   });
 
@@ -68,6 +69,15 @@ export function EditUserSheet({ open, onOpenChange, user, onSuccess }: EditUserS
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const [classList, setClassList] = React.useState<{ value: string; label: string }[]>([]);
+
+  React.useEffect(() => {
+    if (open && isStudent) {
+      getClasses().then((classes) => {
+        setClassList(classes.map((c) => ({ value: c.id, label: c.name })));
+      });
+    }
+  }, [open, isStudent]);
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
 
   useEffect(() => {
@@ -273,9 +283,11 @@ export function EditUserSheet({ open, onOpenChange, user, onSuccess }: EditUserS
 
                 <FormInput
                   control={form.control}
-                  name="className"
+                  name="classId"
                   label="Class"
-                  placeholder="Class name"
+                  variant="select"
+                  selectPlaceholder="Select class"
+                  selectOptions={classList}
                 />
               </>
             )}

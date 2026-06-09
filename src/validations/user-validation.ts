@@ -8,7 +8,7 @@ export const addUserFormSchema = z
     role: z.string().min(1, "Role is required"),
     nickname: z.string().optional(),
     gender: z.string().optional(),
-    className: z.string().optional(),
+    classId: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -35,13 +35,13 @@ export const addUserFormSchema = z
   .refine(
     (data) => {
       if (data.role === "student") {
-        return !!data.className && data.className !== "";
+        return !!data.classId && data.classId !== "";
       }
       return true;
     },
     {
       message: "Class is required for students",
-      path: ["className"],
+      path: ["classId"],
     },
   );
 
@@ -54,7 +54,7 @@ export const updateUserFormSchema = z
     role: z.string().min(1, "Role is required"),
     nickname: z.string().optional(),
     gender: z.string().optional(),
-    className: z.string().optional(),
+    classId: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -81,12 +81,12 @@ export const updateUserFormSchema = z
   .refine(
     (data) => {
       if (data.role === "student") {
-        return !!data.className && data.className !== "";
+        return !!data.classId && data.classId !== "";
       }
       return true;
     },
     {
       message: "Class is required for students",
-      path: ["className"],
+      path: ["classId"],
     },
   );

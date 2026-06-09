@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { user, student } from "@/db/schemas";
-import { eq, count, gte, desc } from "drizzle-orm";
+import { user, student, classTable } from "@/db/schemas";
+import { eq, count, gte, desc, sql } from "drizzle-orm";
 
 export type RecentUser = {
   id: string;
@@ -66,11 +66,12 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 
   const classDistribution = await db
     .select({
-      className: student.className,
+      className: sql<string>`COALESCE(${classTable.name}, 'Unassigned')`,
       count: count(),
     })
     .from(student)
-    .groupBy(student.className);
+    .leftJoin(classTable, eq(student.classId, classTable.id))
+    .groupBy(classTable.name);
 
   return {
     totalUsers,

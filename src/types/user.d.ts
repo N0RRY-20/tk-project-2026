@@ -6,6 +6,7 @@ export interface UserRow {
   role: string | null;
   nickname: string | null;
   gender: "laki-laki" | "perempuan" | null;
+  classId: string | null;
   className: string | null;
   qrCode: string | null;
   audio_url: string | null;
@@ -19,7 +20,7 @@ export type UserFormState = {
     role?: string[];
     nickname?: string[];
     gender?: string[];
-    className?: string[];
+    classId?: string[];
     qrCode?: string[];
     _form?: string[];
   };
@@ -35,11 +36,19 @@ export type UserUpdateFormState = {
     role?: string[];
     nickname?: string[];
     gender?: string[];
-    className?: string[];
+    classId?: string[];
     qrCode?: string[];
     _form?: string[];
   };
 };
+
+export interface ClassRow {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  studentCount?: number;
+}
 
 export type UserDeleteResult = {
   success: boolean;

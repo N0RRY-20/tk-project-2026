@@ -7,7 +7,7 @@ export const USER_DEFAULTS = {
   role: "",
   nickname: "",
   gender: "",
-  className: "",
+  classId: "",
 } as const;
 
 export const INITIAL_USER_FORM_STATE: UserFormState = {

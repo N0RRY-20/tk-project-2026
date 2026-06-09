@@ -80,7 +80,7 @@ async function main() {
         nickname: studentName,
         qrCode,
         gender: convertGender(data.gender as string | null),
-        className: null,
+        classId: null,
         usia: (data.usia as string) || null,
         tempatLahir: (data["tempat lahir"] as string) || null,
         tanggalLahir: excelSerialToDate(data["tanggal lahir"] as number | null),

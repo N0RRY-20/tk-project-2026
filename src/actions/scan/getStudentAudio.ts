@@ -2,7 +2,7 @@
 
 import { generateStudentSpeech } from "@/lib/elevenlabs";
 import { db } from "@/db";
-import { student, user } from "@/db/schemas";
+import { student, user, classTable } from "@/db/schemas";
 import { createAdminClient } from "@/lib/supabase/supabase";
 import { eq } from "drizzle-orm";
 
@@ -15,6 +15,7 @@ export async function getStudentAudioUrl(
     .select()
     .from(student)
     .innerJoin(user, eq(student.id, user.id))
+    .leftJoin(classTable, eq(student.classId, classTable.id))
     .where(eq(student.qrCode, qrCode))
     .limit(1);
 
@@ -22,7 +23,7 @@ export async function getStudentAudioUrl(
   if (row.student.audioUrl) return row.student.audioUrl;
 
   try {
-    const buffer = await generateStudentSpeech(row.user.name, row.student.className ?? undefined);
+    const buffer = await generateStudentSpeech(row.user.name, row.class?.name ?? undefined);
 
     const safeName = row.user.name.replace(/[^\w-]/g, "_");
     const fileName = `${qrCode}-${safeName}.mp3`;

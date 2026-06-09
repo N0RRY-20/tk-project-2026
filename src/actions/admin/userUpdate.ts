@@ -27,7 +27,7 @@ export async function updateUserAction(
     role: formData.get("role"),
     nickname: formData.get("nickname"),
     gender: formData.get("gender"),
-    className: formData.get("className"),
+    classId: formData.get("classId"),
   });
 
   if (!validatedFields.success) {
@@ -46,7 +46,7 @@ export async function updateUserAction(
       role,
       nickname,
       gender,
-      className,
+      classId,
     } = validatedFields.data;
     const headersList = await headers();
     await auth.api.adminUpdateUser({
@@ -82,7 +82,7 @@ export async function updateUserAction(
           id,
           nickname: nickname ?? null,
           gender: gender as "laki-laki" | "perempuan",
-          className: className ?? "",
+          classId: classId ?? null,
           qrCode,
         };
         await tx
@@ -93,7 +93,7 @@ export async function updateUserAction(
             set: {
               nickname: studentData.nickname,
               gender: studentData.gender,
-              className: studentData.className,
+              classId: studentData.classId,
               qrCode: studentData.qrCode,
             },
           });

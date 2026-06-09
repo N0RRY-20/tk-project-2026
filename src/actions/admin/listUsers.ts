@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { student } from "@/db/schemas";
-import { inArray } from "drizzle-orm";
+import { student, classTable } from "@/db/schemas";
+import { inArray, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/better-auth/auth";
@@ -46,23 +46,31 @@ export async function paginateUsers(
 
   const studentRows =
     userIds.length > 0
-      ? await db.select().from(student).where(inArray(student.id, userIds))
+      ? await db
+          .select()
+          .from(student)
+          .leftJoin(classTable, eq(student.classId, classTable.id))
+          .where(inArray(student.id, userIds))
       : [];
 
-  const studentMap = new Map(studentRows.map((s) => [s.id, s]));
+  const studentMap = new Map(studentRows.map((s) => [s.student.id, s]));
 
-  const users: UserRow[] = result.users.map((u) => ({
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    image: u.image ?? null,
-    role: u.role ?? null,
-    nickname: studentMap.get(u.id)?.nickname ?? null,
-    gender: studentMap.get(u.id)?.gender ?? null,
-    className: studentMap.get(u.id)?.className ?? null,
-    qrCode: studentMap.get(u.id)?.qrCode ?? null,
-    audio_url: studentMap.get(u.id)?.audioUrl ?? null,
-  }));
+  const users: UserRow[] = result.users.map((u) => {
+    const row = studentMap.get(u.id);
+    return {
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      image: u.image ?? null,
+      role: u.role ?? null,
+      nickname: row?.student?.nickname ?? null,
+      gender: row?.student?.gender ?? null,
+      classId: row?.student?.classId ?? null,
+      className: row?.class?.name ?? null,
+      qrCode: row?.student?.qrCode ?? null,
+      audio_url: row?.student?.audioUrl ?? null,
+    };
+  });
 
   return { users, total: result.total };
 }

@@ -25,7 +25,7 @@ export async function createUserAction(
     role: formData.get("role"),
     nickname: formData.get("nickname"),
     gender: formData.get("gender"),
-    className: formData.get("className"),
+    classId: formData.get("classId"),
   });
 
   if (!validatedFields.success) {
@@ -36,7 +36,7 @@ export async function createUserAction(
   }
 
   try {
-    const { name, email, password, role, nickname, gender, className } =
+    const { name, email, password, role, nickname, gender, classId } =
       validatedFields.data;
     const user = await auth.api.createUser({
       body: {
@@ -53,7 +53,7 @@ export async function createUserAction(
         id: user.user.id,
         nickname: nickname ?? null,
         gender: gender as "laki-laki" | "perempuan",
-        className: className ?? "",
+        classId: classId ?? null,
         qrCode,
       };
       await db.insert(student).values(studentData);

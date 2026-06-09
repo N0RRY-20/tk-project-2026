@@ -29,6 +29,13 @@
       "when": 1780998834176,
       "tag": "0003_motionless_sue_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781018453104,
+      "tag": "0004_minor_shard",
+      "breakpoints": true
     }
   ]
 }
