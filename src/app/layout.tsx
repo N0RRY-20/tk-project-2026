@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "sonner";
 import { PWARegister } from "@/components/pwa-register";
+import { InstallPrompt } from "@/components/install-prompt";
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -26,6 +27,10 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "TK Project",
+  },
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 };
 
@@ -68,6 +73,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <PWARegister />
+          <InstallPrompt />
         </ThemeProvider>
       </body>
     </html>
