@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
+    "build": "node scripts/fix-kysely.js && next build",
+    "build-config": "node scripts/fix-kysely.js && set NODE_OPTIONS=--max-old-space-size=4096 && next build",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "node --env-file .env --import tsx scripts/seed-user.ts",
     "auth:generate": "npx auth@latest generate --config ./src/lib/better-auth/auth.ts",
-    "postinstall": "node -e \"const fs=require('fs');const p='node_modules/better-auth/node_modules/kysely';if(fs.existsSync(p)){fs.rmSync(p,{recursive:true,force:true});console.log('Removed nested kysely to use top-level 0.28.17')}\""
+    "postinstall": "node scripts/fix-kysely.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -58,7 +59,8 @@
     "eslint-config-next": "16.2.7",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "xlsx": "^0.18.5"
   },
   "overrides": {
     "kysely": "0.28.17"

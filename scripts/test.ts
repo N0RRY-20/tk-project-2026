@@ -5,10 +5,17 @@ import "dotenv/config";
 const elevenlabs = new ElevenLabsClient();
 
 async function main() {
-  const audio = await elevenlabs.textToSpeech.convert("JBFqnCBsd6RMkjVDRZzb", {
-    text: "Tmantap banget aaaah.",
+  const audio = await elevenlabs.textToSpeech.convert("U3dExJoUNcmTY5H6GMuG", {
+    text: "[announcing] NAURA ELVINA RAISA HARAHAP [speaking clearly] sudah di jemput",
     modelId: "eleven_v3",
     outputFormat: "mp3_44100_128",
+    voiceSettings: {
+      stability: 0.7,
+      similarityBoost: 0.75,
+      speed: 0.9,
+      style: 0.1,
+      useSpeakerBoost: true,
+    },
   });
 
   const chunks: Buffer[] = [];

@@ -11,44 +11,85 @@ import { getUserByQrCode } from "@/actions/admin/getUserByQrCode";
 
 import type { UserRow } from "@/types/user";
 
+interface ScannedUser extends UserRow {
+  scannedAt: number;
+}
+
+const STORAGE_KEY = "scanned-users";
+
+function loadFromStorage(): ScannedUser[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveToStorage(users: ScannedUser[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+  } catch {
+    /* quota exceeded, ignore */
+  }
+}
+
 export default function ScanUserPage() {
-  const [lastResult, setLastResult] = React.useState<{
-    qrCode: string;
-    user: UserRow | null;
-  } | null>(null);
+  const [scannedUsers, setScannedUsers] = React.useState<ScannedUser[]>([]);
   const [isSearching, setIsSearching] = React.useState(false);
-  const [scanKey, setScanKey] = React.useState(0);
+  const [unknownQr, setUnknownQr] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (lastResult && !lastResult.user) {
-      const timer = setTimeout(() => setLastResult(null), 3000);
+    setScannedUsers(loadFromStorage());
+  }, []);
+
+  React.useEffect(() => {
+    saveToStorage(scannedUsers);
+  }, [scannedUsers]);
+
+  React.useEffect(() => {
+    if (unknownQr) {
+      const timer = setTimeout(() => setUnknownQr(null), 3000);
       return () => clearTimeout(timer);
     }
-  }, [lastResult]);
+  }, [unknownQr]);
 
   const handleScan = React.useCallback(async (value: string) => {
     setIsSearching(true);
     const user = await getUserByQrCode(value);
-    setScanKey((k) => k + 1);
-    setLastResult({ qrCode: value, user });
     setIsSearching(false);
+
+    if (!user) {
+      setUnknownQr(value);
+      return;
+    }
+
+    setScannedUsers((prev) => {
+      const filtered = prev.filter((u) => u.id !== user.id);
+      return [{ ...user, scannedAt: Date.now() }, ...filtered];
+    });
+  }, []);
+
+  const clearHistory = React.useCallback(() => {
+    setScannedUsers([]);
   }, []);
 
   return (
     <div className="mx-auto max-w-md p-4">
       <QrScanner onScan={handleScan} isSearching={isSearching} />
 
-      {lastResult ? (
-        lastResult.user ? (
-          <ScanResult key={scanKey} user={lastResult.user} />
-        ) : (
-          <div className="flex justify-center p-4">
-            <Badge variant="destructive">
-              <AlertCircle />
-              QR {lastResult.qrCode} tidak dikenal
-            </Badge>
-          </div>
-        )
+      {unknownQr ? (
+        <div className="flex justify-center p-4">
+          <Badge variant="destructive">
+            <AlertCircle />
+            QR {unknownQr} tidak dikenal
+          </Badge>
+        </div>
+      ) : null}
+
+      {scannedUsers.length > 0 ? (
+        <ScanResult users={scannedUsers} onClear={clearHistory} />
       ) : null}
     </div>
   );

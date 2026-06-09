@@ -2,26 +2,47 @@ import { auth } from "../src/lib/better-auth/auth";
 import { db } from "../src/db";
 import { student } from "../src/db/schemas";
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
 
-const adminUsers = Array.from({ length: 20 }, (_, i) => ({
-  name: `Admin ${i + 1}`,
-  email: `admin${i + 1}@example.com`,
-  password: "password123",
-  role: "admin" as const,
-}));
+const jsonPath = path.join(process.cwd(), "file/DATA 2026-1_DATA ANAK .json");
+const rawData = fs.readFileSync(jsonPath, "utf-8");
+const studentData: Record<string, string | number | null>[] = JSON.parse(rawData);
 
-const studentUsers = Array.from({ length: 20 }, (_, i) => ({
-  name: `Student ${i + 1}`,
-  email: `student${i + 1}@example.com`,
-  password: "password123",
-  role: "student" as const,
-  nickname: `student${i + 1}`,
-  gender: i % 2 === 0 ? ("laki-laki" as const) : ("perempuan" as const),
-  className: `Class ${String.fromCharCode(65 + (i % 5))}`,
-}));
+const adminUsers = [
+  {
+    name: "Admin",
+    email: "admin@example.com",
+    password: "password123",
+    role: "admin" as const,
+  },
+];
+
+function excelSerialToDate(serial: number | null): Date | null {
+  if (serial === null) return null;
+  return new Date((serial - 25569) * 86400000);
+}
+
+function convertGender(
+  gender: string | null,
+): "laki-laki" | "perempuan" | null {
+  if (gender === null) return null;
+  if (gender === "L") return "laki-laki";
+  if (gender === "P") return "perempuan";
+  return null;
+}
+
+function generateEmail(name: string, index: number): string {
+  const base = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, ".")
+    .replace(/\.+/g, ".")
+    .replace(/^\.|\.$/g, "");
+  return `${base}.${index}@example.com`;
+}
 
 async function main() {
-  // Create admin users
+  // Create admin user (only 1)
   for (const userData of adminUsers) {
     try {
       const user = await auth.api.createUser({
@@ -36,32 +57,46 @@ async function main() {
     }
   }
 
-  // Create student users
-  for (const userData of studentUsers) {
+  // Create student users from JSON
+  for (let i = 0; i < studentData.length; i++) {
+    const data = studentData[i];
+    const studentName = (data.name as string) || `Student ${i + 1}`;
+
     try {
-      const { nickname, gender, className, ...authData } = userData;
+      const email = generateEmail(studentName, i + 1);
       const user = await auth.api.createUser({
         body: {
-          ...authData,
-          role: authData.role as "admin" | "user",
+          name: studentName,
+          email,
+          password: "password123",
+          // role: "student", aktifkan comment  kalau mau seed
         },
       });
 
       const qrCode = `STU-${crypto.randomUUID().replace(/-/g, "").toUpperCase().slice(0, 10)}`;
 
-      // Insert student record
       await db.insert(student).values({
         id: user.user.id,
-        nickname,
-        gender,
-        className,
+        nickname: studentName,
         qrCode,
+        gender: convertGender(data.gender as string | null),
+        className: null,
+        usia: (data.usia as string) || null,
+        tempatLahir: (data["tempat lahir"] as string) || null,
+        tanggalLahir: excelSerialToDate(data["tanggal lahir"] as number | null),
+        alamat: (data.alamat as string) || null,
+        namaAyah: (data["nama ayah"] as string) || null,
+        namaIbu: (data["nama ibu"] as string) || null,
+        pekerjaanAyah: (data["pekerjaan ayah"] as string) || null,
+        pekerjaanIbu: (data["pekerjaan ibu"] as string) || null,
+        noHp: (data["no hp"] as string) || null,
+        tahunMasuk: (data["tahun masuk"] as string) || null,
       });
 
-      console.log("Student created:", user.user.name, user.user.email);
+      console.log(`Student created: ${studentName} (${email})`);
     } catch (error) {
       console.error(
-        `Failed to create student ${userData.name}:`,
+        `Failed to create student ${studentName}:`,
         error instanceof Error ? error.message : error,
       );
     }

@@ -97,10 +97,15 @@ export function QrScanner({ onScan, isSearching }: QrScannerProps) {
               tracker: highlightCodeOnCanvas,
             }}
             allowMultiple
-            scanDelay={1000}
+            scanDelay={5000}
             sound
             styles={{
-              container: { width: "100%", height: "100%", overflow: "hidden", maxWidth: "100%" },
+              container: {
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                maxWidth: "100%",
+              },
               video: { objectFit: "cover" },
             }}
           />
