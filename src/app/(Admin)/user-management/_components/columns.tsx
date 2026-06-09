@@ -150,13 +150,103 @@ export function createColumns(
     },
     {
       accessorKey: "className",
-      header: "Class",
+      header: "Kelas",
       cell: ({ row }) => {
         if (!row.original.className) {
           return <Badge variant="outline">-</Badge>;
         }
         return <Badge variant="outline">{row.original.className}</Badge>;
       },
+    },
+    {
+      accessorKey: "usia",
+      header: "Usia",
+      cell: ({ row }) => (
+        <span className={!row.original.usia ? "text-muted-foreground" : ""}>
+          {row.original.usia || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "tempatLahir",
+      header: "Tempat Lahir",
+      cell: ({ row }) => (
+        <span className={!row.original.tempatLahir ? "text-muted-foreground" : ""}>
+          {row.original.tempatLahir || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "tanggalLahir",
+      header: "Tanggal Lahir",
+      cell: ({ row }) => (
+        <span className={!row.original.tanggalLahir ? "text-muted-foreground" : ""}>
+          {row.original.tanggalLahir || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "alamat",
+      header: "Alamat",
+      cell: ({ row }) => (
+        <span className={!row.original.alamat ? "text-muted-foreground" : ""}>
+          {row.original.alamat || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "namaAyah",
+      header: "Nama Ayah",
+      cell: ({ row }) => (
+        <span className={!row.original.namaAyah ? "text-muted-foreground" : ""}>
+          {row.original.namaAyah || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "namaIbu",
+      header: "Nama Ibu",
+      cell: ({ row }) => (
+        <span className={!row.original.namaIbu ? "text-muted-foreground" : ""}>
+          {row.original.namaIbu || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "pekerjaanAyah",
+      header: "Pekerjaan Ayah",
+      cell: ({ row }) => (
+        <span className={!row.original.pekerjaanAyah ? "text-muted-foreground" : ""}>
+          {row.original.pekerjaanAyah || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "pekerjaanIbu",
+      header: "Pekerjaan Ibu",
+      cell: ({ row }) => (
+        <span className={!row.original.pekerjaanIbu ? "text-muted-foreground" : ""}>
+          {row.original.pekerjaanIbu || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "noHp",
+      header: "No. HP",
+      cell: ({ row }) => (
+        <span className={!row.original.noHp ? "text-muted-foreground" : ""}>
+          {row.original.noHp || "\u2014"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "tahunMasuk",
+      header: "Tahun Masuk",
+      cell: ({ row }) => (
+        <span className={!row.original.tahunMasuk ? "text-muted-foreground" : ""}>
+          {row.original.tahunMasuk || "\u2014"}
+        </span>
+      ),
     },
     {
       accessorKey: "qrCode",

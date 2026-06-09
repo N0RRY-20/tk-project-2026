@@ -56,7 +56,9 @@ export function ClassManagementClient({
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   const [manageDrawerOpen, setManageDrawerOpen] = React.useState(false);
-  const [managingClass, setManagingClass] = React.useState<ClassRow | null>(null);
+  const [managingClass, setManagingClass] = React.useState<ClassRow | null>(
+    null,
+  );
 
   const openAddDialog = () => {
     setEditingClass(null);
@@ -75,7 +77,7 @@ export function ClassManagementClient({
   const handleSave = async () => {
     const trimmed = className.trim();
     if (!trimmed) {
-      setClassNameError("Class name is required");
+      setClassNameError("Nama kelas wajib diisi");
       return;
     }
     setClassNameError("");
@@ -83,16 +85,16 @@ export function ClassManagementClient({
     try {
       if (editingClass) {
         await updateClass(editingClass.id, trimmed);
-        toast.success("Class updated");
+        toast.success("Kelas diperbarui");
       } else {
         await createClass(trimmed);
-        toast.success("Class created");
+        toast.success("Kelas dibuat");
       }
       setDialogOpen(false);
       setClasses(await (await import("@/actions/admin/class")).getClasses());
       router.refresh();
     } catch {
-      toast.error("Failed to save class");
+      toast.error("Gagal menyimpan kelas");
     } finally {
       setIsSaving(false);
     }
@@ -102,13 +104,13 @@ export function ClassManagementClient({
     if (!deleteTarget) return;
     try {
       await deleteClass(deleteTarget.id);
-      toast.success("Class deleted");
+      toast.success("Kelas dihapus");
       setDeleteOpen(false);
       setDeleteTarget(null);
       setClasses(await (await import("@/actions/admin/class")).getClasses());
       router.refresh();
     } catch {
-      toast.error("Failed to delete class");
+      toast.error("Gagal menghapus kelas");
     }
   };
 
@@ -116,31 +118,27 @@ export function ClassManagementClient({
     <div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:py-6 lg:px-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">Classes</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage student classes
-          </p>
+          <h1 className="text-xl font-semibold">Kelas</h1>
+          <p className="text-sm text-muted-foreground">Kelola kelas siswa</p>
         </div>
         <Button onClick={openAddDialog}>
           <Plus />
-          Add Class
+          Tambah Kelas
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Classes</CardTitle>
-          <CardDescription>
-            {classes.length} class{classes.length !== 1 ? "es" : ""} total
-          </CardDescription>
+          <CardTitle>Semua Kelas</CardTitle>
+          <CardDescription>Total {classes.length} kelas</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Students</TableHead>
-                <TableHead className="w-24">Actions</TableHead>
+                <TableHead>Nama</TableHead>
+                <TableHead>Siswa</TableHead>
+                <TableHead className="w-24">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -151,7 +149,8 @@ export function ClassManagementClient({
                     className="text-center text-muted-foreground py-8"
                   >
                     <School className="mx-auto size-8 mb-2 opacity-50" />
-                    No classes yet. Click &quot;Add Class&quot; to create one.
+                    Kelas belum tersedia. Klik &quot;Tambah Kelas&quot; untuk
+                    membuat kelas baru.
                   </TableCell>
                 </TableRow>
               ) : (
@@ -204,16 +203,16 @@ export function ClassManagementClient({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingClass ? "Edit Class" : "Add Class"}
+              {editingClass ? "Edit Kelas" : "Tambah Kelas"}
             </DialogTitle>
             <DialogDescription>
               {editingClass
-                ? "Update the class name"
-                : "Enter a name for the new class"}
+                ? "Perbarui nama kelas"
+                : "Masukkan nama untuk kelas baru"}
             </DialogDescription>
           </DialogHeader>
           <Field>
-            <FieldLabel htmlFor="class-name">Class Name</FieldLabel>
+            <FieldLabel htmlFor="class-name">Nama Kelas</FieldLabel>
             <Input
               id="class-name"
               value={className}
@@ -221,7 +220,7 @@ export function ClassManagementClient({
                 setClassName(e.target.value);
                 setClassNameError("");
               }}
-              placeholder="e.g. TK A"
+              placeholder="Contoh: TK A"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSave();
               }}
@@ -237,13 +236,11 @@ export function ClassManagementClient({
               onClick={() => setDialogOpen(false)}
               disabled={isSaving}
             >
-              Cancel
+              Batal
             </Button>
             <Button onClick={handleSave} disabled={isSaving}>
-              {isSaving ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : null}
-              {editingClass ? "Update" : "Create"}
+              {isSaving ? <Loader2 className="size-4 animate-spin" /> : null}
+              {editingClass ? "Perbarui" : "Buat"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -252,13 +249,13 @@ export function ClassManagementClient({
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title="Delete Class"
+        title="Hapus Kelas"
         description={
           deleteTarget
-            ? `Are you sure you want to delete "${deleteTarget.name}"? Students in this class will be unassigned.`
+            ? `Apakah Anda yakin ingin menghapus "${deleteTarget.name}"? Semua siswa di kelas ini akan tidak memiliki kelas.`
             : ""
         }
-        confirmLabel="Delete"
+        confirmLabel="Hapus"
         variant="destructive"
         onConfirm={handleDelete}
       />
@@ -273,7 +270,9 @@ export function ClassManagementClient({
             if (!open) setManagingClass(null);
           }}
           onSaved={async () => {
-            setClasses(await (await import("@/actions/admin/class")).getClasses());
+            setClasses(
+              await (await import("@/actions/admin/class")).getClasses(),
+            );
             router.refresh();
           }}
         />

@@ -68,7 +68,7 @@ export function QrScanner({ onScan, isSearching }: QrScannerProps) {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="text-center">
-        <p className="font-semibold">Scan QR Code</p>
+        <p className="font-semibold">Pindai QR Code</p>
         <p className="text-sm">Arahkan kamera ke QR code pengguna</p>
       </div>
 

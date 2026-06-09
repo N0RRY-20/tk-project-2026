@@ -10,6 +10,16 @@ export interface UserRow {
   className: string | null;
   qrCode: string | null;
   audio_url: string | null;
+  usia: string | null;
+  tempatLahir: string | null;
+  tanggalLahir: string | null;
+  alamat: string | null;
+  namaAyah: string | null;
+  namaIbu: string | null;
+  pekerjaanAyah: string | null;
+  pekerjaanIbu: string | null;
+  noHp: string | null;
+  tahunMasuk: string | null;
 }
 export type UserFormState = {
   status?: "idle" | "success" | "error";

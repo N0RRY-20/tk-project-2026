@@ -3,7 +3,7 @@
 import * as React from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
-import { Download } from "lucide-react";
+import { Download, School, UserIcon } from "lucide-react";
 
 import {
   Drawer,
@@ -90,11 +90,20 @@ export function UserDetailDrawer({
                   {user.name}
                 </h3>
               </div>
-              {user.className ? (
-                <Badge variant="default" className="text-sm">
-                  {user.className}
-                </Badge>
-              ) : null}
+              <div className="flex flex-wrap justify-center gap-2">
+                {user.className ? (
+                  <Badge variant="secondary" className="capitalize">
+                    <School />
+                    {user.className}
+                  </Badge>
+                ) : null}
+                {user.gender ? (
+                  <Badge variant="secondary" className="capitalize">
+                    <UserIcon />
+                    {user.gender}
+                  </Badge>
+                ) : null}
+              </div>
 
               {user.qrCode ? (
                 <div className="flex flex-col items-center gap-2">

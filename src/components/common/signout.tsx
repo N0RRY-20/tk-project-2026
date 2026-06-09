@@ -21,7 +21,7 @@ export default function SignOutButton() {
   }, [state.success, router]);
 
   return (
-    <form action={action} className="fixed top-4 right-4">
+    <form action={action}>
       <Button type="submit" className="text-sm">
         {isPending ? (
           <>

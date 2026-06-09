@@ -29,5 +29,15 @@ export async function getUserByQrCode(qrCode: string): Promise<UserRow | null> {
     className: row.class?.name ?? null,
     qrCode: row.student.qrCode ?? null,
     audio_url: row.student.audioUrl ?? null,
+    usia: null,
+    tempatLahir: null,
+    tanggalLahir: null,
+    alamat: null,
+    namaAyah: null,
+    namaIbu: null,
+    pekerjaanAyah: null,
+    pekerjaanIbu: null,
+    noHp: null,
+    tahunMasuk: null,
   };
 }

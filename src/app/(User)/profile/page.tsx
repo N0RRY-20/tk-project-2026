@@ -2,7 +2,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import QRCode from "react-qr-code";
 import { School, UserIcon, Shield, Users } from "lucide-react";
-import SignOutButton from "@/components/common/signout";
 import { ProfileActions } from "./_components/profile-actions";
 import { getSessionUser } from "@/actions/auth/getSessionUser";
 
@@ -75,7 +74,6 @@ export default async function ProfilePage() {
         ) : null}
 
         <ProfileActions user={user} />
-        <SignOutButton />
       </div>
     </div>
   );

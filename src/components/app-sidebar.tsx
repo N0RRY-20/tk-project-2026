@@ -17,9 +17,9 @@ import {
 import {
   LayoutDashboardIcon,
   ListIcon,
-  CommandIcon,
   ScanQrCode,
   School,
+  School2,
 } from "lucide-react";
 
 const data = {
@@ -30,17 +30,17 @@ const data = {
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "User Management",
+      title: "Data Pengguna",
       url: "/user-management",
       icon: <ListIcon />,
     },
     {
-      title: "Scan User",
+      title: "Scan Pengguna",
       url: "/scan-user",
       icon: <ScanQrCode />,
     },
     {
-      title: "Classes",
+      title: "Data Kelas",
       url: "/classes",
       icon: <School />,
     },
@@ -67,8 +67,8 @@ export function AppSidebar({
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <a href="#">
-                <CommandIcon className="size-5!" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <School2 className="size-5!" />
+                <span className="text-base font-semibold">TK Az-Zahra</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

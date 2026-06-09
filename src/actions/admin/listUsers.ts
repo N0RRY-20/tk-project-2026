@@ -57,18 +57,29 @@ export async function paginateUsers(
 
   const users: UserRow[] = result.users.map((u) => {
     const row = studentMap.get(u.id);
+    const s = row?.student;
     return {
       id: u.id,
       name: u.name,
       email: u.email,
       image: u.image ?? null,
       role: u.role ?? null,
-      nickname: row?.student?.nickname ?? null,
-      gender: row?.student?.gender ?? null,
-      classId: row?.student?.classId ?? null,
+      nickname: s?.nickname ?? null,
+      gender: s?.gender ?? null,
+      classId: s?.classId ?? null,
       className: row?.class?.name ?? null,
-      qrCode: row?.student?.qrCode ?? null,
-      audio_url: row?.student?.audioUrl ?? null,
+      qrCode: s?.qrCode ?? null,
+      audio_url: s?.audioUrl ?? null,
+      usia: s?.usia ?? null,
+      tempatLahir: s?.tempatLahir ?? null,
+      tanggalLahir: s?.tanggalLahir ? s.tanggalLahir.toISOString().split("T")[0] : null,
+      alamat: s?.alamat ?? null,
+      namaAyah: s?.namaAyah ?? null,
+      namaIbu: s?.namaIbu ?? null,
+      pekerjaanAyah: s?.pekerjaanAyah ?? null,
+      pekerjaanIbu: s?.pekerjaanIbu ?? null,
+      noHp: s?.noHp ?? null,
+      tahunMasuk: s?.tahunMasuk ?? null,
     };
   });
 
