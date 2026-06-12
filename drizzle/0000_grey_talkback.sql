@@ -52,12 +52,31 @@ CREATE TABLE "verification" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "class" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "class_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
 CREATE TABLE "student" (
 	"id" text PRIMARY KEY NOT NULL,
 	"nickname" text,
-	"qr_code" text NOT NULL,
-	"gender" "gender" NOT NULL,
-	"class_name" text NOT NULL,
+	"qr_code" text,
+	"gender" "gender",
+	"class_id" text,
+	"usia" text,
+	"tempat_lahir" text,
+	"tanggal_lahir" timestamp,
+	"alamat" text,
+	"nama_ayah" text,
+	"nama_ibu" text,
+	"pekerjaan_ayah" text,
+	"pekerjaan_ibu" text,
+	"no_hp" text,
+	"tahun_masuk" text,
+	"audio_url" text,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "student_qr_code_unique" UNIQUE("qr_code")
@@ -66,6 +85,7 @@ CREATE TABLE "student" (
 ALTER TABLE "account" ADD CONSTRAINT "account_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "student" ADD CONSTRAINT "student_id_user_id_fk" FOREIGN KEY ("id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "student" ADD CONSTRAINT "student_class_id_class_id_fk" FOREIGN KEY ("class_id") REFERENCES "public"."class"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "account_userId_idx" ON "account" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "session" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "verification_identifier_idx" ON "verification" USING btree ("identifier");--> statement-breakpoint

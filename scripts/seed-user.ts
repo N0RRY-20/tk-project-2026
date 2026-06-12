@@ -4,6 +4,7 @@ import { student } from "../src/db/schemas";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
+import QRCode from "qrcode";
 
 const jsonPath = path.join(process.cwd(), "file/DATA 2026-1_DATA ANAK .json");
 const rawData = fs.readFileSync(jsonPath, "utf-8");
@@ -41,8 +42,20 @@ function generateEmail(name: string, index: number): string {
   return `${base}.${index}@example.com`;
 }
 
+function sanitizeFilename(name: string): string {
+  return name
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^A-Z0-9\-]/g, "");
+}
+
 async function main() {
-  // Create admin user (only 1)
+  const qrDir = path.join(process.cwd(), "file", "qrcodes");
+  if (!fs.existsSync(qrDir)) {
+    fs.mkdirSync(qrDir, { recursive: true });
+  }
+
   for (const userData of adminUsers) {
     try {
       const user = await auth.api.createUser({
@@ -93,7 +106,15 @@ async function main() {
         tahunMasuk: (data["tahun masuk"] as string) || null,
       });
 
-      console.log(`Student created: ${studentName} (${email})`);
+      const filename = sanitizeFilename(studentName);
+      const qrPath = path.join(qrDir, `${filename}.png`);
+      await QRCode.toFile(qrPath, qrCode, {
+        width: 300,
+        margin: 2,
+        color: { dark: "#000000", light: "#FFFFFF" },
+      });
+
+      console.log(`Student created: ${studentName} (${email}) -> ${filename}.png`);
     } catch (error) {
       console.error(
         `Failed to create student ${studentName}:`,

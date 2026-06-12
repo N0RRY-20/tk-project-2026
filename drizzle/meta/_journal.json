@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1780680225381,
-      "tag": "0000_rare_bucky",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1780738799971,
-      "tag": "0001_friendly_frog_thor",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1780817291526,
-      "tag": "0002_overconfident_killraven",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1780998834176,
-      "tag": "0003_motionless_sue_storm",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1781018453104,
-      "tag": "0004_minor_shard",
+      "when": 1781241075231,
+      "tag": "0000_grey_talkback",
       "breakpoints": true
     }
   ]
