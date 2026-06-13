@@ -23,7 +23,11 @@ export async function getStudentAudioUrl(
   if (row.student.audioUrl) return row.student.audioUrl;
 
   try {
-    const buffer = await generateStudentSpeech(row.user.name, row.class?.name ?? undefined);
+    const studentName = row.student.nickname ?? row.user.name;
+    const buffer = await generateStudentSpeech(
+      studentName,
+      row.class?.name ?? undefined,
+    );
 
     const safeName = row.user.name.replace(/[^\w-]/g, "_");
     const fileName = `${qrCode}-${safeName}.mp3`;

@@ -31,18 +31,6 @@ export const addUserFormSchema = z
       message: "Gender is required for students",
       path: ["gender"],
     },
-  )
-  .refine(
-    (data) => {
-      if (data.role === "student") {
-        return !!data.classId && data.classId !== "";
-      }
-      return true;
-    },
-    {
-      message: "Class is required for students",
-      path: ["classId"],
-    },
   );
 
 export const updateUserFormSchema = z
@@ -50,7 +38,12 @@ export const updateUserFormSchema = z
     id: z.string().min(1, "User ID is required"),
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
-    password: z.union([z.string().min(8, "Password must be at least 8 characters"), z.literal("")]).optional(),
+    password: z
+      .union([
+        z.string().min(8, "Password must be at least 8 characters"),
+        z.literal(""),
+      ])
+      .optional(),
     role: z.string().min(1, "Role is required"),
     nickname: z.string().optional(),
     gender: z.string().optional(),
@@ -76,17 +69,5 @@ export const updateUserFormSchema = z
     {
       message: "Gender is required for students",
       path: ["gender"],
-    },
-  )
-  .refine(
-    (data) => {
-      if (data.role === "student") {
-        return !!data.classId && data.classId !== "";
-      }
-      return true;
-    },
-    {
-      message: "Class is required for students",
-      path: ["classId"],
     },
   );

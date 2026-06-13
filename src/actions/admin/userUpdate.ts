@@ -38,16 +38,8 @@ export async function updateUserAction(
   }
 
   try {
-    const {
-      id,
-      name,
-      email,
-      password,
-      role,
-      nickname,
-      gender,
-      classId,
-    } = validatedFields.data;
+    const { id, name, email, password, role, nickname, gender, classId } =
+      validatedFields.data;
     const headersList = await headers();
     await auth.api.adminUpdateUser({
       headers: headersList,
@@ -82,7 +74,7 @@ export async function updateUserAction(
           id,
           nickname: nickname ?? null,
           gender: gender as "laki-laki" | "perempuan",
-          classId: classId ?? null,
+          classId: classId || null,
           qrCode,
         };
         await tx
@@ -103,6 +95,7 @@ export async function updateUserAction(
     revalidatePath("/user-management");
     return { status: "success" };
   } catch (error) {
+    console.log(error);
     return {
       status: "error",
       errors: {

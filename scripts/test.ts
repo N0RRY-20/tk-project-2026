@@ -6,7 +6,7 @@ const elevenlabs = new ElevenLabsClient();
 
 async function main() {
   const audio = await elevenlabs.textToSpeech.convert("U3dExJoUNcmTY5H6GMuG", {
-    text: "[announcing] NAURA ELVINA RAISA HARAHAP [speaking clearly] sudah di jemput",
+    text: "[announcing] Maezura HAFIDZOH QIRANI. [speaking clearly] sudah di jemput",
     modelId: "eleven_v3",
     outputFormat: "mp3_44100_128",
     voiceSettings: {
